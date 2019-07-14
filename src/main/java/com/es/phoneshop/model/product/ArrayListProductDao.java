@@ -57,6 +57,12 @@ public class ArrayListProductDao implements ProductDao {
                 .collect(Collectors.toList());
     }
 
+    public List<Product> userSearch(String userInput){
+        return threadSaveArrayList.stream()
+                .filter(product -> product.getStock() > 0)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public void save(Product product) {
         threadSaveArrayList.add(product);

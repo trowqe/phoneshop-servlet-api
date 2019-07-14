@@ -27,4 +27,11 @@ public class ProductListPageServlet extends HttpServlet {
         request.setAttribute("products", productDao.findProducts());
         request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
     }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String input = request.getParameter("phone-search");
+        request.setAttribute("products", productDao.userSearch(input));
+        request.getRequestDispatcher("/WEB-INF/pages/productList.jsp").forward(request, response);
+    }
 }

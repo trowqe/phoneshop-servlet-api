@@ -1,5 +1,8 @@
 package com.es.phoneshop.model.product;
 
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.dao.ProductNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,19 +16,25 @@ public class ArrayListProductDaoTest {
 
     @Before
     public void setup() {
-        productDao = new ArrayListProductDao();
+        productDao = ArrayListProductDao.getInstance();
     }
 
-    @Test
+    @Test(expected = ProductNotFoundException.class)
     public void deleteProductTest() {
         Product testProduct = new Product(23L, "simsxg75", "Siemens SXG75", new BigDecimal(150), Currency.getInstance("USD"), 40,
                 "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
+        productDao.save(testProduct);
         productDao.delete(23L);
-        assertEquals(productDao.getProduct(23L), testProduct);
+       productDao.getProduct(23L);
+    }
+
+    @Test(expected = ProductNotFoundException.class)
+    public void getProductTest() {
+        productDao.getProduct(-1L);
     }
 
     @Test
-    public void getProductTest() {
+    public void getProductWithNonExistentIdTest() {
         Product testProduct = new Product(33L, "simsxg75", "Siemens SXG75", new BigDecimal(150), Currency.getInstance("USD"), 40,
                 "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
         productDao.save(testProduct);
@@ -42,15 +51,19 @@ public class ArrayListProductDaoTest {
 
 
     @Test
-    public void findProductsTest() {
-        Product testProductWithNullPrice = new Product(53L, "simsxg75", "Siemens SXG75", null, Currency.getInstance("USD"), 40,
+    public void findProductsWithoutNullPriceTest() {
+        BigDecimal nullPrise = null;
+        Product testProductWithNullPrice = new Product(53L, "simsxg75", "Siemens SXG75", nullPrise, Currency.getInstance("USD"), 40,
                 "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
         productDao.save(testProductWithNullPrice);
         assertFalse(productDao.findProducts().contains(testProductWithNullPrice));
+    }
 
-        Product testProductWithStockLevel0 = new Product(63L, "simsxg75", "Siemens SXG75", null, Currency.getInstance("USD"), 0,
+    @Test
+    public void findProductsWithoutStockLevel0Test() {
+        Product testProductWithStockLevel0 = new Product(63L, "simsxg75", "Siemens SXG75", new BigDecimal(150), Currency.getInstance("USD"), 0,
                 "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
-        productDao.save(testProductWithNullPrice);
+        productDao.save(testProductWithStockLevel0);
         assertFalse(productDao.findProducts().contains(testProductWithStockLevel0));
     }
 }

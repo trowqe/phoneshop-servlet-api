@@ -1,9 +1,10 @@
-package com.es.phoneshop.model.product;
+package com.es.phoneshop.dao;
+
+import com.es.phoneshop.model.product.Product;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -11,10 +12,15 @@ import java.util.stream.Collectors;
 public class ArrayListProductDao implements ProductDao {
 
     private List<Product> threadSaveArrayList;
+    private static final ArrayListProductDao arrayListProductDaoInstance = new ArrayListProductDao();
 
-    public ArrayListProductDao() {
+    private ArrayListProductDao() {
         this.threadSaveArrayList = new CopyOnWriteArrayList<>();
         initArrayList(threadSaveArrayList);
+    }
+
+    public static ArrayListProductDao getInstance() {
+        return arrayListProductDaoInstance;
     }
 
     private List initArrayList(List list) {
@@ -64,6 +70,6 @@ public class ArrayListProductDao implements ProductDao {
 
     @Override
     public void delete(Long id) {
-        threadSaveArrayList.removeIf(product -> product.getId() == id);
+        threadSaveArrayList.removeIf(product -> product.getId().equals(id));
     }
 }

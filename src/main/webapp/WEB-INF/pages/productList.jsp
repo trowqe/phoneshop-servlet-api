@@ -9,8 +9,9 @@
     Welcome to Expert-Soft training!
   </p>
 
+  <!--<form action=""></form>-->
   <form method="post">
-    <input type="text" name="phone-search" placeholder="Type phone model ...">
+    <input type="text" name="userPhoneSearchInput" placeholder="Type phone model ...">
     <button type="submit" name="search">Search</button>
   </form>
 
@@ -18,7 +19,9 @@
     <thead>
       <tr>
         <td>Image</td>
-        <td>Description</td>
+        <td>
+          Description
+        </td>
         <td class="price">Price</td>
       </tr>
     </thead>

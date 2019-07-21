@@ -25,7 +25,7 @@ public class ArrayListProductDaoTest {
                 "https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/manufacturer/Siemens/Siemens%20SXG75.jpg");
         productDao.save(testProduct);
         productDao.delete(23L);
-       productDao.getProduct(23L);
+        productDao.getProduct(23L);
     }
 
     @Test(expected = ProductNotFoundException.class)

@@ -11,12 +11,11 @@ import java.util.stream.Collectors;
 // doesn't check same id of products
 public class ArrayListProductDao implements ProductDao {
 
-    private List<Product> threadSaveArrayList;
     private static final ArrayListProductDao arrayListProductDaoInstance = new ArrayListProductDao();
+    private List<Product> threadSaveArrayList;
 
     private ArrayListProductDao() {
         this.threadSaveArrayList = new CopyOnWriteArrayList<>();
-        initArrayList(threadSaveArrayList);
     }
 
     public static ArrayListProductDao getInstance() {
@@ -73,53 +72,4 @@ public class ArrayListProductDao implements ProductDao {
         threadSaveArrayList.removeIf(product -> product.getId().equals(id));
     }
 
-    @Override
-    public List<Product> sortByDescription() {
-        return threadSaveArrayList.stream()
-                .sorted((s1, s2) -> {
-                    String[] split1 = s1.getDescription().split(" ");
-                    String[] split2 = s2.getDescription().split(" ");
-
-                    int n = split2[0].compareTo(split1[0]);
-
-                    if (n == 0) {
-                        return split2[0].compareTo(
-                                split1[0]);
-                    }
-
-                    return n;
-                }).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Product> sortByDescriptionReversed() {
-        return threadSaveArrayList.stream()
-                .sorted((s1, s2) -> {
-                    String[] split1 = s1.getDescription().split(" ");
-                    String[] split2 = s2.getDescription().split(" ");
-
-                    int n = split1[0].compareTo(split2[0]);
-
-                    if (n == 0) {
-                        return split1[0].compareTo(
-                                split2[0]);
-                    }
-
-                    return n;
-                }).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Product> sortByPrice() {
-        return threadSaveArrayList.stream()
-                .sorted(Comparator.comparing(Product::getPrice).reversed())
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Product> sortByPriceReversed() {
-        return threadSaveArrayList.stream()
-                .sorted(Comparator.comparing(Product::getPrice))
-                .collect(Collectors.toList());
-    }
 }

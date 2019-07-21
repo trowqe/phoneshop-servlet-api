@@ -8,6 +8,12 @@
   <p>
     Welcome to Expert-Soft training!
   </p>
+
+  <form method="post">
+    <input type="text" name="phone-search" placeholder="Type phone model ...">
+    <button type="submit" name="search">Search</button>
+  </form>
+
   <table>
     <thead>
       <tr>

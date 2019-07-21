@@ -11,4 +11,5 @@ public interface ProductService {
     List<Product> sortByPrice();
     List<Product> sortByDescriptionReversed();
     List<Product> sortByPriceReversed();
+    String getProductDetailsByCode(String code);
 }

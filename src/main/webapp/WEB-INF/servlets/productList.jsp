@@ -5,11 +5,11 @@
 
 <jsp:useBean id="products" type="java.util.ArrayList" scope="request"/>
 <tags:master pageTitle="Product List">
+    <jsp:include page="/WEB-INF/servlets/header.jsp"/>
     <p>
         Welcome to Expert-Soft training!
     </p>
 
-    <!--<form action=""></form>-->
     <form method="post" action="products">
         <input type="text" name="userPhoneSearchInput" placeholder="Type phone model ...">
         <button type="submit" name="search">Search</button>
@@ -21,7 +21,6 @@
             <td>Image</td>
             <td>
                 Description
-
                 <form method="post" action="products">
                     <input type="radio" name="descriptionSort" value="0"/>a-z
                     <input type="radio" name="descriptionSort" value="1"/>z-a
@@ -31,7 +30,6 @@
             </td>
             <td class="price">
                 Price
-
                 <form method="post" action="products">
                     <input type="radio" name="priceSort" value="0"/>cheap
                     <input type="radio" name="priceSort" value="1"/>expensive
@@ -44,10 +42,11 @@
         <c:forEach var="product" items="${products}">
             <tr>
                 <td>
-                        <img class="product-tile"
-                             src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
+                    <img class="product-tile"
+                         src="https://raw.githubusercontent.com/andrewosipenko/phoneshop-ext-images/master/${product.imageUrl}">
                 </td>
                 <td>
+                    <a href="/phoneshop_servlet_api_war/products/details?productCode=${product.code}">details</a>
                         ${product.description}
                 </td>
                 <td class="price">
@@ -57,4 +56,5 @@
             </tr>
         </c:forEach>
     </table>
+    <jsp:include page="/WEB-INF/servlets/footer.jsp"/>
 </tags:master>

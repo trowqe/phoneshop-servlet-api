@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ArrayListProductService implements ProductService{
+public class ArrayListProductService implements ProductService {
     private ProductDao productDao = ArrayListProductDao.getInstance();
 
     @Override
@@ -47,5 +47,15 @@ public class ArrayListProductService implements ProductService{
         return productDao.findProducts().stream()
                 .sorted(Comparator.comparing(Product::getPrice))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getProductDetailsByCode(String code) {
+        if (productDao.getProductByCode(code) != null) {
+            return "details about product with code " + code;
+        } else {
+            return null;
+        }
+
     }
 }

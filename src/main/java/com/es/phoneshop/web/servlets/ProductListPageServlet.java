@@ -1,7 +1,5 @@
 package com.es.phoneshop.web.servlets;
 
-import com.es.phoneshop.dao.ArrayListProductDao;
-import com.es.phoneshop.dao.ProductDao;
 import com.es.phoneshop.service.ArrayListProductService;
 import com.es.phoneshop.service.ProductService;
 

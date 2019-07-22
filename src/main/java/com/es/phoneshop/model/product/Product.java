@@ -52,6 +52,8 @@ public class Product {
         this.description = description;
     }
 
+    public Product(String description) { this.description = description; }
+
     public BigDecimal getPrice() {
         return price;
     }

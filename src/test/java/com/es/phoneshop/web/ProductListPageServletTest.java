@@ -1,5 +1,10 @@
 package com.es.phoneshop.web;
 
+import com.es.phoneshop.dao.ArrayListProductDao;
+import com.es.phoneshop.dao.ProductDao;
+import com.es.phoneshop.service.ArrayListProductService;
+import com.es.phoneshop.service.ProductService;
+import com.es.phoneshop.web.servlets.ProductListPageServlet;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,13 +30,17 @@ public class ProductListPageServletTest {
     private ProductListPageServlet servlet = new ProductListPageServlet();
 
     @Test
-    public void whenCallDoGetTheServletReturnProductListJsp () throws ServletException, IOException {
-         String path = "/WEB-INF/pages/productList.jsp";
-         when(request.getRequestDispatcher(path)).thenReturn(requestDispatcher);
+    public void whenCallDoGetTheServletReturnProductListJsp() throws ServletException, IOException {
+        String path = "/WEB-INF/servlets/productList.jsp";
 
-         servlet.init();
-         servlet.doGet(request, response);
 
-         verify(requestDispatcher).forward(request, response);
+        when(request.getRequestDispatcher(path)).thenReturn(requestDispatcher);
+
+        servlet.init();
+        servlet.doGet(request, response);
+
+        verify(requestDispatcher).forward(request, response);
     }
+
+
 }

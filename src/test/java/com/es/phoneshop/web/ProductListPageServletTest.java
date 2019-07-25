@@ -1,9 +1,5 @@
 package com.es.phoneshop.web;
 
-import com.es.phoneshop.dao.ArrayListProductDao;
-import com.es.phoneshop.dao.ProductDao;
-import com.es.phoneshop.service.ArrayListProductService;
-import com.es.phoneshop.service.ProductService;
 import com.es.phoneshop.web.servlets.ProductListPageServlet;
 import org.junit.Test;
 import org.junit.runner.RunWith;

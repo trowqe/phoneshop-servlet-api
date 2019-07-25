@@ -2,20 +2,16 @@ package com.es.phoneshop.dao;
 
 import com.es.phoneshop.model.product.Product;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-// doesn't check same id of products
 public class ArrayListProductDao implements ProductDao {
 
     private static final ArrayListProductDao arrayListProductDaoInstance = new ArrayListProductDao();
-    private List<Product> threadSaveArrayList;
+    private List<Product> threadSaveArrayList = new CopyOnWriteArrayList<>();
 
     private ArrayListProductDao() {
-        this.threadSaveArrayList = new CopyOnWriteArrayList<>();
     }
 
     public static ArrayListProductDao getInstance() {
@@ -23,9 +19,9 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     @Override
-    public Product getProduct(Long id) {
+    public Product findById(Long id) {
         return threadSaveArrayList.stream()
-                .filter(product -> product.getId().equals(id))
+                .filter(p -> p.getId().equals(id))
                 .findFirst()
                 .orElseThrow(ProductNotFoundException::new);
     }
@@ -35,49 +31,52 @@ public class ArrayListProductDao implements ProductDao {
         return threadSaveArrayList.stream()
                 .filter(product -> product.getCode().equals(code))
                 .findFirst()
-                .orElse(null);
+                .orElseThrow(ProductNotFoundException::new);
     }
 
     @Override
-    //The method returns products having non null price and stock level > 0
-    public List<Product> findProducts() {
-        return threadSaveArrayList.stream()
-                .filter(product -> product.getStock() > 0)
-                .filter(product -> product.getPrice() != null)
-                .collect(Collectors.toList());
+    public List<Product> findAll() {
+        return threadSaveArrayList;
     }
 
-    @Override
-    public List<Product> findProductsByDescription(String description) {
-        String[] searchCriteria = description.split("\\s");
-        Map<Product, Integer> productMap = new HashMap<>();
-        for (Product product : findProducts()) {
-            productMap.put(product, 0);
-        }
-
-        for (String criteria : searchCriteria) {
-            productMap.forEach((key, value) -> {
-                        if (key.getDescription().toLowerCase().contains(criteria.toLowerCase())) {
-                            productMap.put(key, value + 1);
-                        }
-                    }
-            );
-        }
-       return productMap.entrySet().stream()
-                .filter(p -> p.getValue() > 0)
-                .sorted(Map.Entry.<Product, Integer>comparingByValue().reversed())
-                .map(Map.Entry::getKey)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public void save(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException();
+        }
+        else if (product.getId() == null) {
+            saveNewProduct(product);
+        }
+        else if (product.getId() != null) {
+            updateProduct(product);
+        }
+    }
+
+    // copyOnWriteArrList значит threadSaveArrayList.add(product) не над синхронизир
+    private void saveNewProduct(Product product) {
+        product.setId(generateProductId());
         threadSaveArrayList.add(product);
     }
 
-    @Override
-    public void delete(Long id) {
-        threadSaveArrayList.removeIf(product -> product.getId().equals(id));
+    private Long generateProductId() {
+        return new Random().nextLong();
     }
 
+    private void updateProduct(Product product) {
+        threadSaveArrayList = threadSaveArrayList.parallelStream()
+                .filter(p -> !p.getId().equals(product.getId()))
+                .collect(Collectors.toList());
+
+        threadSaveArrayList.add(product);
+    }
+
+    // тут parallelStream() знач не над синхронизировать
+    @Override
+    public void delete(Long id) {
+        threadSaveArrayList.parallelStream()
+                .filter(product -> !product.getId().equals(id))
+                .findFirst()
+                .orElseThrow(ProductNotFoundException::new);
+    }
 }

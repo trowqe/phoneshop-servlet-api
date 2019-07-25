@@ -8,9 +8,13 @@ public class Product {
     private Long id;
     private String code;
     private String description;
-    /** null means there is no price because the product is outdated or new */
+    /**
+     * null means there is no price because the product is outdated or new
+     */
     private BigDecimal price;
-    /** can be null if the price is null */
+    /**
+     * can be null if the price is null
+     */
     private Currency currency;
     private int stock;
     private String imageUrl;
@@ -52,7 +56,9 @@ public class Product {
         this.description = description;
     }
 
-    public Product(String description) { this.description = description; }
+    public Product(String description) {
+        this.description = description;
+    }
 
     public BigDecimal getPrice() {
         return price;
@@ -91,18 +97,24 @@ public class Product {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Product product = (Product) o;
-        return stock == product.stock &&
-                id.equals(product.id) &&
-                code.equals(product.code) &&
-                description.equals(product.description) &&
-                Objects.equals(price, product.price) &&
-                currency.equals(product.currency) &&
-                imageUrl.equals(product.imageUrl);
+        return code.equals(product.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code, description, price, currency, stock, imageUrl);
+        return Objects.hash(code);
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", currency=" + currency +
+                ", stock=" + stock +
+                ", imageUrl='" + imageUrl + '\'' +
+                '}';
+    }
 }

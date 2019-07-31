@@ -21,7 +21,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findProducts(String query, String sort) {
         List<Product> result = productDao.findAll();
 
-        if (query != null) {
+        /*if (query != null) {
             result = findProductsByQuery(query);
         }
 
@@ -29,7 +29,12 @@ public class ProductServiceImpl implements ProductService {
             result = result.stream()
                     .sorted(validateSort(sort))
                     .collect(Collectors.toList());
-        }
+        }*/
+
+            result = findProductsByQuery(query)
+                    .stream()
+                    .sorted(validateSort(sort))
+                    .collect(Collectors.toList());
 
         return result;
     }

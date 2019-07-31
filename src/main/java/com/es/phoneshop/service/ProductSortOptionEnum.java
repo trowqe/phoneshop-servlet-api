@@ -5,6 +5,8 @@ import com.es.phoneshop.model.product.Product;
 import java.util.Comparator;
 
 public enum ProductSortOptionEnum implements Comparator<Product> {
+
+
     priceAsc {
         @Override
         public int compare(Product p1, Product p2) {

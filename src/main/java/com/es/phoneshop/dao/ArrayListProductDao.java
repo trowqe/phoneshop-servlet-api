@@ -10,6 +10,7 @@ public class ArrayListProductDao implements ProductDao {
 
     private static final ArrayListProductDao arrayListProductDaoInstance = new ArrayListProductDao();
     private List<Product> threadSaveArrayList = new CopyOnWriteArrayList<>();
+    private static long id=1;
 
     private ArrayListProductDao() {
     }
@@ -48,7 +49,7 @@ public class ArrayListProductDao implements ProductDao {
         else if (product.getId() == null) {
             saveNewProduct(product);
         }
-        else if (product.getId() != null) {
+        else {
             updateProduct(product);
         }
     }
@@ -60,23 +61,20 @@ public class ArrayListProductDao implements ProductDao {
     }
 
     private Long generateProductId() {
-        return new Random().nextLong();
+        return id++;
     }
 
     private void updateProduct(Product product) {
-        threadSaveArrayList = threadSaveArrayList.parallelStream()
+        threadSaveArrayList = threadSaveArrayList.stream()
                 .filter(p -> !p.getId().equals(product.getId()))
                 .collect(Collectors.toList());
 
         threadSaveArrayList.add(product);
     }
 
-    // тут parallelStream() знач не над синхронизировать
     @Override
     public void delete(Long id) {
-        threadSaveArrayList.parallelStream()
-                .filter(product -> !product.getId().equals(id))
-                .findFirst()
-                .orElseThrow(ProductNotFoundException::new);
+        Product productToDelete=findById(id);
+        threadSaveArrayList.remove(productToDelete);
     }
 }
